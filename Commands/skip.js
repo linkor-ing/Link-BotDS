@@ -1,0 +1,18 @@
+const { getVoiceConnection } = require('@discordjs/voice');
+
+module.exports.command = "skip";
+module.exports.discr = "Skip correct music track!";
+
+module.exports.func = async function (message) {
+    const chat = message.channel;
+    const voice = await message.member.voice.channel;
+    try {
+        const connection = getVoiceConnection(voice.guild.id);
+        const cvoice = connection.joinConfig.channelId;
+        if (!voice || cvoice !== voice.id) return chat.send("Ты не в VoiceChat с ботом");
+        connection._state.subscription.player.stop();
+    } catch (e) {
+        console.warn(e);
+        return chat.send("Error");
+    }
+}
